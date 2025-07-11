@@ -34,7 +34,6 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     alert('Conta criada com sucesso! Verifique seu e-mail antes de fazer login.');
     window.location.href = 'login.html';
   } catch (error) {
-    console.error(error);
     alert('Erro ao registrar: ' + error.message);
   }
 });
