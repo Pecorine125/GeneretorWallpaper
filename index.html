@@ -1,1 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gerador de Wallpapers</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Gerador de Wallpapers</h1>
 
+  <form id="wallpaperForm">
+    <label for="prompt">Texto do wallpaper:</label>
+    <input type="text" id="prompt" required />
+
+    <label for="width">Largura (px):</label>
+    <input type="number" id="width" min="64" max="2048" required />
+
+    <label for="height">Altura (px):</label>
+    <input type="number" id="height" min="64" max="2048" required />
+
+    <label for="refImage">Imagem de referência (opcional):</label>
+    <input type="file" id="refImage" accept="image/*" />
+    <img id="preview" style="max-width: 100%; display:none; margin-top: 10px;" />
+
+    <label for="isAdult">Imagem é +18?</label>
+    <select id="isAdult" required>
+      <option value="nao">Não</option>
+      <option value="sim">Sim</option>
+    </select>
+
+    <button type="submit">Gerar Wallpaper</button>
+  </form>
+
+  <div id="output"></div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>

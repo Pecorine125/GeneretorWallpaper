@@ -1,1 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro - Gerador de Wallpapers</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Registro de Usuário</h1>
 
+  <form id="registerForm">
+    <label for="name">Nome Completo:</label>
+    <input type="text" id="name" required />
+
+    <label for="email">E-mail:</label>
+    <input type="email" id="email" required />
+
+    <label for="password">Senha (mínimo 8 caracteres):</label>
+    <input type="password" id="password" minlength="8" required />
+
+    <label for="birthDate">Data de Nascimento:</label>
+    <input type="date" id="birthDate" required />
+
+    <button type="submit">Registrar</button>
+  </form>
+
+  <p>Já tem conta? <a href="login.html">Faça login</a></p>
+
+  <script type="module">
+    import { auth, db } from './firebase.js';
+    import { createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+    import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const birthDate = document.getElementById("birthDate").value;
+
+      if (password.length < 8) {
+        alert("A senha deve ter no mínimo 8 caracteres.");
+        return;
+      }
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Salvar dados adicionais no Firestore
+        await setDoc(doc(db, "usuarios", user.uid), {
+          nome: name,
+          dataNascimento: birthDate,
+          email: email
+        });
+
+        await sendEmailVerification(user);
+        alert("Registro realizado! Um e-mail de confirmação foi enviado. Confirme para poder usar o sistema.");
+
+        window.location.href = "login.html";
+      } catch (error) {
+        alert("Erro no registro: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
