@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <form id="loginForm">
+  <form id="loginForm" autocomplete="off">
     <h2>Login</h2>
     <input type="email" id="email" placeholder="E-mail" required />
-    <input type="password" id="password" placeholder="Senha" required />
+    <input type="password" id="password" placeholder="Senha" required minlength="8" />
     <button type="submit">Entrar</button>
   </form>
 
