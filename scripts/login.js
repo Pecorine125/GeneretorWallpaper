@@ -2,6 +2,10 @@ import { auth, db } from '../firebase.js';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 
+document.getElementById('btnRegister').addEventListener('click', () => {
+  window.location.href = 'register.html';
+});
+
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -20,9 +24,11 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     const userData = userDoc.data();
 
-    localStorage.setItem('userType', userData.type);
+    if (!userData) {
+      alert('Usuário não encontrado no banco de dados.');
+      return;
+    }
 
-    alert('Login bem-sucedido!');
     if (userData.type === 'admin') {
       window.location.href = 'admin.html';
     } else {
