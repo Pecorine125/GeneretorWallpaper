@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gerador de Wallpapers</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h2>Gerador de Wallpapers</h2>
+
+  <form id="generateForm">
+    <label for="prompt">Descrição (texto):</label><br />
+    <textarea id="prompt" rows="3" cols="40" required></textarea><br />
+
+    <label for="size">Escolha o tamanho:</label><br />
+    <select id="size" required>
+      <option value="">Selecione</option>
+      <option value="512x512">512x512</option>
+      <option value="1024x1024">1024x1024</option>
+      <option value="1920x1080">1920x1080</option>
+      <option value="2560x1440">2560x1440</option>
+    </select><br /><br />
+
+    <label for="imgReference">Imagem de referência (opcional):</label><br />
+    <input type="file" id="imgReference" accept="image/*" /><br />
+    <img id="previewImg" style="display:none; max-width: 300px; margin-top:10px;" /><br />
+
+    <label>Conteúdo +18?</label>
+    <input type="checkbox" id="isAdult" /><br /><br />
+
+    <button type="submit">Gerar Wallpaper</button>
+  </form>
+
+  <button id="toggleBlurBtn" style="display:none; margin-top:20px;">Marcar/Desmarcar Blur nas Imagens</button>
+
+  <div id="result"></div>
+
+  <script type="module" src="scripts/preview.js"></script>
+  <script type="module" src="scripts/protect18.js"></script>
+  <script type="module" src="scripts/generate.js"></script>
+</body>
+</html>
