@@ -12,10 +12,10 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 
   const age = getAge(birthDate);
 
-  if (age < 13) {
-    alert('Você deve ter no mínimo 13 anos para se registrar.');
-    return;
-  }
+  if (age < 18) {
+  alert('Você deve ter no mínimo 18 anos para se registrar.');
+  return;
+}
 
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
