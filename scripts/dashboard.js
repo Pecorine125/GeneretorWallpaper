@@ -1,44 +1,32 @@
 import { auth, db } from '../firebase.js';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-
-const welcomeMsg = document.getElementById('welcomeMsg');
-const btnGenerate = document.getElementById('btnGenerate');
-const btnAdmin = document.getElementById('btnAdmin');
-const btnLogout = document.getElementById('btnLogout');
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = 'index.html';
-    return;
+  } else {
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    const userData = userDoc.data();
+    const age = calculateAge(userData.birthDate);
+
+    document.getElementById('userName').innerText = `Olá, ${userData.name}!`;
+
+    if (age < 18) {
+      document.getElementById('warning').innerText = '⚠️ Algumas funcionalidades estão restritas para menores de 18 anos.';
+    } else {
+      document.getElementById('warning').innerText = '';
+    }
   }
-
-  const userDoc = await getDoc(doc(db, 'users', user.uid));
-  if (!userDoc.exists()) {
-    alert('Usuário não encontrado no banco.');
-    await signOut(auth);
-    window.location.href = 'index.html';
-    return;
-  }
-
-  const userData = userDoc.data();
-
-  welcomeMsg.textContent = `Olá, ${userData.name}!`;
-
-  if (userData.type === 'admin') {
-    btnAdmin.style.display = 'inline-block';
-  }
-
-  btnGenerate.addEventListener('click', () => {
-    window.location.href = 'generate.html';
-  });
-
-  btnAdmin.addEventListener('click', () => {
-    window.location.href = 'admin.html';
-  });
-
-  btnLogout.addEventListener('click', async () => {
-    await signOut(auth);
-    window.location.href = 'index.html';
-  });
 });
+
+function calculateAge(birthDateStr) {
+  const today = new Date();
+  const birthDate = new Date(birthDateStr);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
