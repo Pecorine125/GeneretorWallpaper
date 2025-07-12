@@ -4,18 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Painel de Logs</title>
-  <link rel="stylesheet" href="styles/logs.css">
+  <link rel="stylesheet" href="styles/logs.css" />
 </head>
 <body>
   <h1>📋 Painel de Logs</h1>
-  <button id="exportCSV">⬇️ Exportar CSV</button>
+
+  <div class="filters">
+    <input type="date" id="filterDate" />
+    <input type="text" id="filterUser" placeholder="Filtrar por usuário" />
+    <input type="text" id="filterPrompt" placeholder="Filtrar por prompt" />
+    <button id="clearFilters">Limpar Filtros</button>
+    <button id="exportCSV">⬇️ Exportar CSV</button>
+  </div>
+
   <table id="logsTable">
     <thead>
       <tr>
         <th>Usuário</th>
         <th>Prompt</th>
         <th>+18</th>
-        <th>Data/Hora</th>
+        <th id="sortDate" style="cursor: pointer;">Data/Hora 🔽</th>
       </tr>
     </thead>
     <tbody></tbody>
