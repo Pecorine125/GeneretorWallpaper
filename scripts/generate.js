@@ -1,19 +1,32 @@
 import { auth, db, storage } from '../firebase.js';
 import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+
+let userId = null;
+let userAge = 0;
+let userData = null;
 
 const generateForm = document.getElementById('generateForm');
 const previewImg = document.getElementById('previewImg');
 const toggleBlurBtn = document.getElementById('toggleBlurBtn');
 const resultDiv = document.getElementById('result');
-let userId = null;
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = 'index.html';
   } else {
     userId = user.uid;
+    const userDoc = await getDoc(doc(db, 'users', userId));
+    userData = userDoc.data();
+
+    userAge = calculateAge(userData.birthDate);
+
+    if (userAge < 18) {
+      document.getElementById('isAdult').disabled = true;
+      document.getElementById('isAdult').checked = false;
+      toggleBlurBtn.style.display = 'none';
+    }
   }
 });
 
@@ -36,10 +49,10 @@ generateForm.addEventListener('submit', async (e) => {
 
   const prompt = generateForm.prompt.value.trim();
   const size = generateForm.size.value;
-  const isAdult = generateForm.isAdult.checked;
+  const isAdult = userAge >= 18 && generateForm.isAdult.checked;
 
   if (!prompt || !size) {
-    alert('Por favor, preencha a descrição e escolha o tamanho.');
+    alert('Preencha todos os campos obrigatórios.');
     return;
   }
 
@@ -52,9 +65,6 @@ generateForm.addEventListener('submit', async (e) => {
       await uploadBytes(storageRef, file);
       imageUrl = await getDownloadURL(storageRef);
     }
-
-    // Aqui você chama a API para gerar o wallpaper e recebe a URL gerada.
-    // No exemplo abaixo, está usando um placeholder.
 
     const generatedImageUrl = 'https://via.placeholder.com/512x512.png?text=Wallpaper+Gerado';
 
@@ -69,19 +79,27 @@ generateForm.addEventListener('submit', async (e) => {
     });
 
     resultDiv.innerHTML = `<p>Wallpaper gerado:</p><img src="${generatedImageUrl}" alt="Wallpaper" />`;
-    toggleBlurBtn.style.display = isAdult ? 'inline-block' : 'none';
+
+    if (isAdult) toggleBlurBtn.style.display = 'inline-block';
   } catch (error) {
-    alert('Erro ao gerar wallpaper: ' + error.message);
+    alert('Erro ao gerar: ' + error.message);
   }
 });
 
 toggleBlurBtn.addEventListener('click', () => {
   const imgs = resultDiv.querySelectorAll('img');
   imgs.forEach(img => {
-    if (img.style.filter === 'blur(8px)') {
-      img.style.filter = 'none';
-    } else {
-      img.style.filter = 'blur(8px)';
-    }
+    img.style.filter = img.style.filter === 'blur(8px)' ? 'none' : 'blur(8px)';
   });
 });
+
+function calculateAge(birthDateStr) {
+  const today = new Date();
+  const birthDate = new Date(birthDateStr);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
