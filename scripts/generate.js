@@ -2,6 +2,7 @@ import { auth, db, storage } from '../firebase.js';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { salvarLog } from './logs.js';
 
 let userId = null;
 let userAge = 0;
@@ -84,6 +85,7 @@ generateForm.addEventListener('submit', async (e) => {
   } catch (error) {
     alert('Erro ao gerar: ' + error.message);
   }
+  await salvarLog(userId, prompt, isAdult);
 });
 
 toggleBlurBtn.addEventListener('click', () => {
