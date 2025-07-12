@@ -27,7 +27,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
       email,
       birthDate,
       age,
-      type: email === 'admin@wallpaper.com' ? 'admin' : 'user',
+      type: email === 'programadorjunior25@gmail.com' ? 'admin' : 'user',
       createdAt: new Date().toISOString(),
     });
 
