@@ -12,10 +12,10 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 
   const age = getAge(birthDate);
 
-  if (age < 18) {
-  alert('Você deve ter no mínimo 18 anos para se registrar.');
-  return;
-}
+  if (age < 13) {
+    alert('Você deve ter pelo menos 13 anos para se registrar.');
+    return;
+  }
 
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -25,10 +25,9 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     await setDoc(doc(db, 'users', user.uid), {
       name,
       email,
-      birthDate,
-      age,
-      type: email === 'programadorjunior25@gmail.com' ? 'admin' : 'user',
+      birthDate, // mantemos isso para cálculo futuro
       createdAt: new Date().toISOString(),
+      type: email === 'harahel@meusite.com' ? 'admin' : 'user'
     });
 
     alert('Conta criada com sucesso! Verifique seu e-mail antes de fazer login.');
@@ -43,8 +42,10 @@ function getAge(birthDateString) {
   const birthDate = new Date(birthDateString);
   let age = today.getFullYear() - birthDate.getFullYear();
   const m = today.getMonth() - birthDate.getMonth();
+
   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
     age--;
   }
+
   return age;
 }
