@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Painel de Logs</title>
   <link rel="stylesheet" href="styles/logs.css" />
 </head>
@@ -13,6 +13,11 @@
     <input type="date" id="filterDate" />
     <input type="text" id="filterUser" placeholder="Filtrar por usuário" />
     <input type="text" id="filterPrompt" placeholder="Filtrar por prompt" />
+    <select id="filterAdult">
+      <option value="any">+18: Qualquer</option>
+      <option value="yes">Sim</option>
+      <option value="no">Não</option>
+    </select>
     <button id="clearFilters">Limpar Filtros</button>
     <button id="exportCSV">⬇️ Exportar CSV</button>
   </div>
@@ -24,6 +29,7 @@
         <th>Prompt</th>
         <th>+18</th>
         <th id="sortDate" style="cursor: pointer;">Data/Hora 🔽</th>
+        <th>Imagem</th>
       </tr>
     </thead>
     <tbody></tbody>
